@@ -1,3 +1,5 @@
+#define PLIST_PATH @"/var/mobile/Library/Preferences/com.gilshahar7.volumebrightnessprefs.plist"
+
 @interface UIDevice (blabla)
 @property float _backlightLevel;
 @end
@@ -14,10 +16,19 @@
 
 static bool brightness = false;
 static NSTimer *myTimer;
+static bool enabled;
+
+static void loadPrefs() {
+	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
+    enabled = [[prefs objectForKey:@"enabled"] boolValue];
+}
 
 %hook SpringBoard
 -(BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1{
   %log;
+  if(enabled == false){
+    return %orig;
+  }
 
   if([arg1.allPresses.allObjects count] < 2){
     if(arg1.allPresses.allObjects[0].force == 0){
@@ -108,3 +119,8 @@ static NSTimer *myTimer;
   }
 }
 %end
+
+%ctor{
+    loadPrefs();
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.gilshahar7.volumebrightnessprefs.settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+}

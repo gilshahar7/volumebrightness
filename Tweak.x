@@ -21,12 +21,16 @@ static bool enabled;
 static void loadPrefs() {
 	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
     enabled = [[prefs objectForKey:@"enabled"] boolValue];
+		if(myTimer && enabled == false){
+			[myTimer invalidate];
+		}
 }
 
 %hook SpringBoard
 -(BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1{
   %log;
-  if(enabled == false){
+	loadPrefs();
+	if(enabled == false){
     return %orig;
   }
 

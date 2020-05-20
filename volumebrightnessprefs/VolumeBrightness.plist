@@ -4,18 +4,20 @@
 <dict>
 	<key>entry</key>
 	<dict>
-		<key>bundle</key>
-		<string>VolumeBrightnessPrefs</string>
 		<key>cell</key>
-		<string>PSLinkCell</string>
-		<key>detail</key>
-		<string>VBPRootListController</string>
+		<string>PSSwitchCell</string>
+		<key>key</key>
+		<string>enabled</string>
+		<key>default</key>
+		<true/>
+		<key>defaults</key>
+		<string>com.gilshahar7.volumebrightnessprefs</string>
 		<key>icon</key>
 		<string>icon.png</string>
-		<key>isController</key>
-		<true/>
 		<key>label</key>
 		<string>VolumeBrightness</string>
+		<key>PostNotification</key>
+		<string>com.gilshahar7.volumebrightnessprefs.settingschanged</string>
 	</dict>
 </dict>
 </plist>

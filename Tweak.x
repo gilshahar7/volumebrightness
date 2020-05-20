@@ -14,6 +14,7 @@ static bool brightness = false;
   %log;
 
   if([arg1.allPresses.allObjects count] < 2){
+
     if(brightness){
       if(arg1.allPresses.allObjects[0].force == 1){
         float currentBrightness = [UIDevice currentDevice]._backlightLevel;
@@ -27,9 +28,11 @@ static bool brightness = false;
           //NSLog(@"[VolumeBrightness] brightness down");
           [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:YES];
         }
-        return NO;
+        return %orig;
+
       }
     }
+
     return %orig;
   }
 
@@ -43,9 +46,6 @@ static bool brightness = false;
     //NSLog(@"[VolumeBrightness] both volume buttons pressed");
     brightness = !brightness;
   }
-
-
-
   return %orig;
 
   // type = 102 -> vol up
@@ -53,5 +53,26 @@ static bool brightness = false;
 
   // force = 0 -> button released
   // force = 1 -> button pressed
+}
+%end
+
+
+%hook SBVolumeHardwareButton
+-(void)volumeIncreasePress:(id)arg1{
+  %log;
+  if(brightness){
+    NSLog(@"[VolumeBrightness] eat the event");
+  }else{
+    %orig;
+  }
+}
+
+-(void)volumeDecreasePress:(id)arg1{
+  %log;
+  if(brightness){
+    NSLog(@"[VolumeBrightness] eat the event");
+  }else{
+    %orig;
+  }
 }
 %end

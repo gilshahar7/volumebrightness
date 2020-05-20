@@ -7,25 +7,43 @@
 -(void)_setBrightnessLevel:(float)arg1 showHUD:(BOOL)arg2 ;
 @end
 
+@interface SpringBoard
+-(void)brightnessUp;
+-(void)brightnessDown;
+@end
+
 static bool brightness = false;
+static NSTimer *myTimer;
 
 %hook SpringBoard
 -(BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1{
   %log;
 
   if([arg1.allPresses.allObjects count] < 2){
-
+    if(arg1.allPresses.allObjects[0].force == 0){
+      if(myTimer){
+        [myTimer invalidate];
+      }
+    }
     if(brightness){
       if(arg1.allPresses.allObjects[0].force == 1){
         float currentBrightness = [UIDevice currentDevice]._backlightLevel;
         if(arg1.allPresses.allObjects[0].type == 102){
           //volume up
-          //NSLog(@"[VolumeBrightness] brightness up");
+          myTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
+            target:self
+            selector:@selector(brightnessUp)
+            userInfo:nil
+            repeats:YES];
           [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:YES];
         }
         if(arg1.allPresses.allObjects[0].type == 103){
           //volume down
-          //NSLog(@"[VolumeBrightness] brightness down");
+          myTimer = [NSTimer scheduledTimerWithTimeInterval:0.15
+            target:self
+            selector:@selector(brightnessDown)
+            userInfo:nil
+            repeats:YES];
           [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:YES];
         }
         return %orig;
@@ -54,6 +72,20 @@ static bool brightness = false;
   // force = 0 -> button released
   // force = 1 -> button pressed
 }
+
+%new
+-(void)brightnessUp{
+  float currentBrightness = [UIDevice currentDevice]._backlightLevel;
+  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:YES];
+}
+
+%new
+-(void)brightnessDown{
+  float currentBrightness = [UIDevice currentDevice]._backlightLevel;
+  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:YES];
+}
+
+
 %end
 
 

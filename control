@@ -1,7 +1,7 @@
 Package: com.gilshahar7.volumebrightness
 Name: VolumeBrightness
 Depends: mobilesubstrate
-Version: 1.1
+Version: 1.2
 Architecture: iphoneos-arm
 Description: Toggle between changing the volume and brightness by pressing both volume buttons.
 Maintainer: gilshahar7

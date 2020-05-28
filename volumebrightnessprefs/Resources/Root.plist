@@ -9,6 +9,10 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>VolumeBrightness</string>
+			<key>footerAlignment</key>
+			<integer>0</integer>
+			<key>footerText</key>
+			<string>Play haptic feedback when VolumeBrightness is invoked through pressing both the volume buttons</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -23,6 +27,44 @@
 			<string>Enable</string>
 			<key>PostNotification</key>
 			<string>com.gilshahar7.volumebrightnessprefs.settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.gilshahar7.volumebrightnessprefs</string>
+			<key>key</key>
+			<string>showHud</string>
+			<key>label</key>
+			<string>Show brightness HUD</string>
+			<key>PostNotification</key>
+			<string>com.gilshahar7.volumebrightnessprefs.settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.gilshahar7.volumebrightnessprefs</string>
+			<key>key</key>
+			<string>shouldPlayHaptic</string>
+			<key>label</key>
+			<string>Play haptic feedback</string>
+			<key>PostNotification</key>
+			<string>com.gilshahar7.volumebrightnessprefs.settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Cooldown duration</string>
+			<key>footerAlignment</key>
+			<integer>0</integer>
+			<key>footerText</key>
+			<string>Return to normal volume controls after this duration in seconds</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -45,6 +87,58 @@
 			<string>cooldownTime</string>
 			<key>PostNotification</key>
 			<string>com.gilshahar7.volumebrightnessprefs.settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>About</string>
+			<key>footerAlignment</key>
+			<integer>0</integer>
+			<key>footerText</key>
+			<string>Credits to bIg BrAiN TheLazyITGuy for the awesome idea.
+
+This tweak was built during a livestream on our discord server.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>reddit</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>Reddit</string>
+			<key>label</key>
+			<string>Reddit (u/gilshahar7)</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>sendEmail</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>Email</string>
+			<key>label</key>
+			<string>Email</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>openTwitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>Twitter</string>
+			<key>label</key>
+			<string>Twitter (@gilshahar7)</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>openDiscord</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>Discord</string>
+			<key>label</key>
+			<string>iOS Development Discord</string>
 		</dict>
 	</array>
 	<key>title</key>

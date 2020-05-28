@@ -30,4 +30,25 @@
 	return _specifiers;
 }
 
+- (void)openTwitterWithUsername:(NSString*)username
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/%@", username]]];
+}
+- (void)openTwitter
+{
+    [self openTwitterWithUsername:@"gilshahar7"];
+}
+
+- (void)reddit {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.reddit.com/user/gilshahar7/"]];
+}
+
+- (void)sendEmail {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"mailto:gilshahardex99@gmail.com?subject=VolumeBrightness"]];
+}
+
+- (void)openDiscord {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://discord.gg/WyYNw5q"]];
+}
+
 @end

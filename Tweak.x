@@ -1,5 +1,8 @@
 #define PLIST_PATH @"/var/mobile/Library/Preferences/com.gilshahar7.volumebrightnessprefs.plist"
 
+#import <AudioToolbox/AudioToolbox.h>
+#import <AudioToolbox/AudioServices.h>
+
 @interface UIDevice (blabla)
 @property float _backlightLevel;
 @end
@@ -19,12 +22,16 @@ static bool brightness = false;
 static NSTimer *holdingButtonTimer;
 static NSTimer *coolDownTimer;
 static bool enabled;
+static bool showHud;
+static bool shouldPlayHaptic;
 static float cooldownTime;
 
 static void loadPrefs() {
 	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
 
 	enabled = [prefs objectForKey:@"enabled"] ? [[prefs objectForKey:@"enabled"] boolValue] : YES;
+	showHud = [prefs objectForKey:@"showHud"] ? [[prefs objectForKey:@"showHud"] boolValue] : YES;
+	shouldPlayHaptic = [prefs objectForKey:@"shouldPlayHaptic"] ? [[prefs objectForKey:@"shouldPlayHaptic"] boolValue] : YES;
 	cooldownTime = [prefs objectForKey:@"cooldownTime"] ? [[prefs objectForKey:@"cooldownTime"] floatValue] : 5;
 }
 
@@ -52,7 +59,7 @@ static void loadPrefs() {
             selector:@selector(brightnessUp)
             userInfo:nil
             repeats:YES];
-          [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:YES];
+          [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:showHud];
         }
         if(arg1.allPresses.allObjects[0].type == 103){
           //volume down
@@ -62,7 +69,7 @@ static void loadPrefs() {
             selector:@selector(brightnessDown)
             userInfo:nil
             repeats:YES];
-          [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:YES];
+          [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:showHud];
         }
         return %orig;
 
@@ -80,6 +87,9 @@ static void loadPrefs() {
 
   if(((type0 == 102 && type1 == 103) || (type0 == 103 && type1 == 102)) && force0 && force1){
     //NSLog(@"[VolumeBrightness] both volume buttons pressed");
+		if(shouldPlayHaptic){
+			AudioServicesPlaySystemSound(1520);
+		}
     brightness = !brightness;
 		coolDownTimer = [NSTimer scheduledTimerWithTimeInterval:cooldownTime
 			target:self
@@ -100,14 +110,14 @@ static void loadPrefs() {
 -(void)brightnessUp{
 	[self resetCoolDownTimer];
   float currentBrightness = [UIDevice currentDevice]._backlightLevel;
-  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:YES];
+  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness + 0.0625 showHUD:showHud];
 }
 
 %new
 -(void)brightnessDown{
 	[self resetCoolDownTimer];
   float currentBrightness = [UIDevice currentDevice]._backlightLevel;
-  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:YES];
+  [[%c(SBBrightnessController) sharedBrightnessController] _setBrightnessLevel: currentBrightness - 0.0625 showHUD:showHud];
 }
 
 %new

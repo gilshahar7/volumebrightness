@@ -9,6 +9,7 @@ TWEAK_NAME = VolumeBrightness
 
 VolumeBrightness_FILES = Tweak.x
 VolumeBrightness_CFLAGS = -fobjc-arc
+VolumeBrightness_FRAMEWORKS = CoreTelephony AudioToolbox
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += volumebrightnessprefs

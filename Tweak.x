@@ -2,6 +2,10 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioToolbox/AudioServices.h>
+#import <libactivator/libactivator.h>
+
+@interface VolumeBrightnessListener : NSObject<LAListener>
+@end
 
 @interface UIDevice (blabla)
 @property float _backlightLevel;
@@ -34,6 +38,34 @@ static void loadPrefs() {
 	shouldPlayHaptic = [prefs objectForKey:@"shouldPlayHaptic"] ? [[prefs objectForKey:@"shouldPlayHaptic"] boolValue] : YES;
 	cooldownTime = [prefs objectForKey:@"cooldownTime"] ? [[prefs objectForKey:@"cooldownTime"] floatValue] : 5;
 }
+
+@implementation VolumeBrightnessListener
+
+-(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
+  //We got called! run some stuff.
+	brightness = !brightness;
+	if(shouldPlayHaptic){
+		AudioServicesPlaySystemSound(1520);
+	}
+}
+
++(void)load {
+  @autoreleasepool {
+    [[LAActivator sharedInstance] registerListener:[self new] forName:@"com.gilshahar7.volumebrightnessprefs.toggle"];
+  }
+}
+
+- (NSString *)activator:(LAActivator *)activator requiresLocalizedTitleForListenerName:(NSString *)listenerName {
+    return @"Invoke VolumeBrightness toggle";
+}
+- (NSString *)activator:(LAActivator *)activator requiresLocalizedDescriptionForListenerName:(NSString *)listenerName {
+    return @"Change from controlling the volume/brightness with the volume buttons";
+}
+- (NSArray *)activator:(LAActivator *)activator requiresCompatibleEventModesForListenerWithName:(NSString *)listenerName {
+    return [NSArray arrayWithObjects:@"springboard", @"lockscreen", @"application", nil];
+}
+
+@end
 
 %hook SpringBoard
 -(BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1{
@@ -75,30 +107,9 @@ static void loadPrefs() {
 
       }
     }
-
-    return %orig;
   }//Single press over
 
-  int type0 = arg1.allPresses.allObjects[0].type;
-  int force0 = arg1.allPresses.allObjects[0].force;
-
-  int type1 = arg1.allPresses.allObjects[1].type;
-  int force1 = arg1.allPresses.allObjects[1].force;
-
-  if(((type0 == 102 && type1 == 103) || (type0 == 103 && type1 == 102)) && force0 && force1){
-    //NSLog(@"[VolumeBrightness] both volume buttons pressed");
-		if(shouldPlayHaptic){
-			AudioServicesPlaySystemSound(1520);
-		}
-    brightness = !brightness;
-		coolDownTimer = [NSTimer scheduledTimerWithTimeInterval:cooldownTime
-			target:self
-			selector:@selector(switchToVolumeControl)
-			userInfo:nil
-			repeats:NO];
-  }
-  return %orig;
-
+	return %orig;
   // type = 102 -> vol up
   // type = 103 -> vol down
 
